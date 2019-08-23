@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles'
 import { Link, withRouter } from 'react-router-dom'
 
+
 const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
@@ -54,7 +55,8 @@ const RegisterWithRouter = withRouter(function RegisterContent(props) {
     }
 
     const register = () => {
-        fetch("http://defi.sher.vip/user/createWeId", {
+        console.log("in register")
+        fetch("http:///user/createWeId", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -72,17 +74,19 @@ const RegisterWithRouter = withRouter(function RegisterContent(props) {
             }
         }).then(function(data) {
             console.log(data);
-            chrome.storage.local.set({weId: data.data.weId}, function() {
-                console.log('Weid is set to ' + data.data.weId);
-                chrome.storage.local.set({prvKey: data.data.userWeIdPrivateKey.privateKey}, function() {
-                    console.log('prvKey is set to ' + data.data.userWeIdPrivateKey.privateKey);
-                });
-                chrome.storage.local.set({pubKey: data.data.userWeIdPublicKey.publicKey}, function() {
-                    console.log('PubKey is set to ' + data.data.userWeIdPublicKey.publicKey);
-                    alert("创建成功！");//TODO Dialog组件
-                    props.history.push({pathname: `/home`})
-                });
-            }); 
+            chrome.storage.local.set({nickName: values.name}, function() {
+                chrome.storage.local.set({weId: data.data.weId}, function() {
+                    console.log('Weid is set to ' + data.data.weId);
+                    chrome.storage.local.set({prvKey: data.data.userWeIdPrivateKey.privateKey}, function() {
+                        console.log('prvKey is set to ' + data.data.userWeIdPrivateKey.privateKey);
+                    });
+                    chrome.storage.local.set({pubKey: data.data.userWeIdPublicKey.publicKey}, function() {
+                        console.log('PubKey is set to ' + data.data.userWeIdPublicKey.publicKey);
+                        alert("创建成功！");//TODO Dialog组件
+                        props.history.push({pathname: `/home`})
+                    });
+                }); 
+            });
         }).catch(function(err) {
             console.log(err);
             alert("创建失败，请检查网络！");
@@ -117,7 +121,7 @@ const RegisterWithRouter = withRouter(function RegisterContent(props) {
                     variant="outlined"
                 />
                 <div>
-                    <Button variant="outlined" className={classes.button}>
+                    <Button variant="outlined" className={classes.button} onClick={()=>{props.history.push({pathname: `/home`})}}>
                         取消
                     </Button>
                     <Button variant="outlined" color="primary" className={classes.button} onClick={register}>

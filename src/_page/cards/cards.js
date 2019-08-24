@@ -29,7 +29,6 @@ const CardsWithRouter = withRouter(function CardsContent(props) {
     const [certs, setCerts] = React.useState([])
     const [data,setData] = React.useState("null")
     const classes = useStyles()
-//http://192.168.1.111:8080/common/getCredential
 
     useEffect(() => {
         if (certs.length == 0) {

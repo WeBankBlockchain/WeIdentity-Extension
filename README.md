@@ -16,3 +16,4 @@ WeIdentity Chrome Extension
 ![](nomnoml.svg)
 
 
+# weid-extension

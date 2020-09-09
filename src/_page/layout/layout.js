@@ -1,3 +1,4 @@
+/*global chrome*/
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -10,7 +11,9 @@ import { Link, withRouter } from 'react-router-dom'
 import { List, ListItemIcon, ListItemText, ListItem } from '@material-ui/core'
 import Drawer from '@material-ui/core/Drawer'
 import Divider from '@material-ui/core/Divider';
-
+import getStorage from '../../_component/Storage'
+import { useState, useEffect } from 'react';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,10 +29,11 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1
     },
     menuText: {
-        flexGrow: 4
+        flexGrow: 4,
+        textAlign: "center"
     },
     menuIcon: {
-        flexGrow: 1
+        textAlign: "center"
     },
     title: {
         flexGrow: 1,
@@ -37,9 +41,20 @@ const useStyles = makeStyles(theme => ({
     appBarSpacer: theme.mixins.toolbar,
     content: {
         flexGrow: 1
+    },
+    Center:{
+        textAlign: "center"
+    },
+    logo:{
+        height: 35
     }
     
 }))
+
+
+	//Shared code. When the argument length is two, it is coming from the context
+// menu, while a single argument is coming from the browser action.
+
 
 const LayoutWithRouter = withRouter(function Layout(props) {
     const classes = useStyles()
@@ -49,30 +64,46 @@ const LayoutWithRouter = withRouter(function Layout(props) {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return
         }
-
         setOpen(open)
     }
-
     const handleDrawerOpen = () => {
         setOpen(true)
     }
     const handleDrawerClose = () => {
         setOpen(false)
     }
+
+    useEffect(() => {
+        chrome.storage.local.get(['isAuth'], function(result) {
+            console.log("isAuth:",result.isAuth)
+            console.log(props)
+        })
+    }, []);
+
     return (
         <div className={classes.root}>
             <div>
                 <AppBar position="absolute" className={classes.appBar}>
                     <Toolbar>
-                        <IconButton className={classes.menuIcon} aria-label="menu" onClick={handleDrawerOpen}>
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={classes.menuText} variant="h5" color="primary">
-                            weCertification
-                        </Typography>
-                        <Button className={classes.menuButton}>卡包</Button>
+                        <Grid container>
+                            <Grid item xs={3} className={classes.Center}>
+                                <IconButton className={classes.menuIcon} aria-label="menu" onClick={handleDrawerOpen}>
+                                    <img src="/Logo.png" alt="" className={classes.logo}/>
+                                </IconButton>
+                            </Grid>
+                            <Grid item xs={6} className={classes.Center}>
+                                <ListItem className={classes.menuText} button component={Link} to="/home"  selected={'/home' === pathname}>
+                                    Apollo
+                                </ListItem>
+                            </Grid>
+                            <Grid item xs={3} className={classes.Center}>
+                                <Button className={classes.menuButton} component={Link} to="/cards"  selected={'/cards' === pathname}>卡包</Button>
+                            </Grid>
+                        </Grid> 
+                        
+                        
+                        
                     </Toolbar>
-
                 </AppBar>
                 
             </div>
@@ -94,6 +125,18 @@ const LayoutWithRouter = withRouter(function Layout(props) {
                     </ListItem>
                     <ListItem button component={Link} to="/home"  selected={'/home' === pathname}>
                         <ListItemText primary={"主页"} />
+                    </ListItem>
+                    <ListItem button component={Link} to="/verify"  selected={'/verify' === pathname}>
+                        <ListItemText primary={"核验"} />
+                    </ListItem>
+                    <ListItem button component={Link} to="/cards"  selected={'/cards' === pathname}>
+                        <ListItemText primary={"卡包"} />
+                    </ListItem>
+                    <ListItem button component={Link} to="/subcard"  selected={'/subcard' === pathname}>
+                        <ListItemText primary={"子凭证"} />
+                    </ListItem>
+                    <ListItem button component={Link} to="/"  selected={'/' === pathname}>
+                        <ListItemText primary={"根"} />
                     </ListItem>
                 </List>
             </Drawer>

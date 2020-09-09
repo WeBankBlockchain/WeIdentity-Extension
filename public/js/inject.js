@@ -108,7 +108,11 @@ function Pra() {
     this.version = '1.0.0';
   
     window.addEventListener('message', function (event) {
-        this.console.log("我在inject.js，收到content-script的消息");
+        this.console.log("我在inject.js，收到postMessage的消息",event);
+        if (event.data.type == "inject"){
+            console.log(event.data.msg+'('+event.data.params+')')
+            eval(event.data.msg+'('+"'"+event.data.params+"'"+')')
+        }
     }, false);
   }
 
@@ -137,7 +141,7 @@ Pra.prototype.getWeID = function () {
 ***授权凭证
 ***@return 返回weID
 */
-Pra.prototype.getCredential = function (organization) {
+Pra.prototype.getCredential = function (org,idIndex) {
     return new Promise(function (resolve, reject) {
         var praCallbackFun = getCallbackName();
         window[praCallbackFun] = function (res) {
@@ -147,7 +151,6 @@ Pra.prototype.getCredential = function (organization) {
                     {
                         status:"",   0/1
                         data:{
-
                         }     
                     }
                 */ 
@@ -156,10 +159,9 @@ Pra.prototype.getCredential = function (organization) {
                 reject(e);
             }
         }
-        sendPraRequest('getCredential', '', '', {name: organization}, praCallbackFun);
+        sendPraRequest('getCredential', '', '', {name: org,index:idIndex}, praCallbackFun);
     });
 }
-
 if (typeof window !== 'undefined') {
     window.weID = new Pra();
-  }
+}

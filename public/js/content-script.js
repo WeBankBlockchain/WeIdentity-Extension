@@ -1,3 +1,4 @@
+/*global chrome*/
 (function() {
 	console.log('这是 content-script！');
 })();
@@ -29,28 +30,38 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 	console.log('收到来自 ' + (sender.tab ? "content-script(" + sender.tab.url + ")" : "popup或者background") + ' 的消息：', request);
 });
 
+
+var port = chrome.runtime.connect({name: "knockknock"});
+port.onMessage.addListener(function(msg) {
+    console.log("content receive:",msg)
+});
+
+
 // 主动发送消息给后台
 // 要演示此功能，请打开控制台主动执行sendMessageToBackground()
 function sendMessageToBackground(message) {
+	//port.postMessage({data: message});
 	chrome.runtime.sendMessage({greeting: message || '你好，我是content-script呀，我主动发消息给后台！'}, function(response) {
 		console.log("我在content-script,主动发消息给background，回复是：",response);
+		window.postMessage({ type: "inject", params: response, msg: message.msg }, '*');
+		//eval(message.msg+'('+'1'+')')
 	});
+
+	
 };
 
 // 接收来自inject的消息
 window.addEventListener("message", function(e)
 {
-	console.log("我在content-script,我收到了inject传来的消息：",e);
 	
-}, false);
-
-chrome.runtime.onConnect.addListener(function(port) {
-	console.log(port);
-	if(port.name == 'test-connect') {
-		port.onMessage.addListener(function(msg) {
-			console.log('收到长连接消息：', msg);
-			tip('收到长连接消息：' + JSON.stringify(msg));
-			if(msg.question == '你是谁啊？') port.postMessage({answer: '我是你爸！'});
-		});
+	if (e.data.type == "getWeID"){
+		console.log("我在content-script,我收到了inject传来的getWeID消息：",e);
+		sendMessageToBackground(e.data)
+		//e.data.msg
+		
 	}
-});
+	else if (e.data.type == "getCredential"){
+		console.log("我在content-script,我收到了inject传来的getCredential消息：",e);
+		sendMessageToBackground(e.data)
+	}
+}, false);

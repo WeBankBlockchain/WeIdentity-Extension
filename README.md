@@ -2,37 +2,28 @@
 
 WeIdentity Chrome Extension
 
-## Building locally
-
-- git clone https://github.com/DeFiDefender/WeIdentity-Extension.git
-- cd WeIdentity-Extension
-- npm run build
-- Open Chrome & Input "chrome://extension" in url blank
-- Load folder & Select 'build' folder 
 
 
-# Architecture
+## Build Setup
 
-![](nomnoml.svg)
+``` bash
+# install dependencies
+yarn install
+
+# serve with hot reload at localhost:3000
+即可在开发环境预览调试页面
+yarn start
+Open Chrome & Input "http://localhost:3000"
+
+# build for production with minification
+生成最终Chrome Extension文件
+yarn build
+Open Chrome & Input "chrome://extension" in url blank
+Load folder & Select 'build' folder
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 
-# weid-extension
-
-WeIdentity Chrome Extension
-
-## Building locally
-
-- git clone https://github.com/WeBankFinTech/weid-extension
-- cd WeIdentity-Extension
-- npm run build
-- Open Chrome & Input "chrome://extension" in url blank
-- Load folder & Select 'build' folder 
 
 
-# Architecture
-
-![](nomnoml.svg)
-
-# Applications
-
-- [DeFiDefender](https://github.com/FISCO-BCOS/hackathon/tree/master/201908-Shenzhen/Bithacks)

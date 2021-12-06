@@ -22,7 +22,7 @@ WeIdentity Chrome Extension
 
 ## Building locally
 
-- git clone https://github.com/WeBankFinTech/weid-extension
+- git clone https://github.com/WeBankBlockchain/weid-extension
 - cd WeIdentity-Extension
 - npm run build
 - Open Chrome & Input "chrome://extension" in url blank
